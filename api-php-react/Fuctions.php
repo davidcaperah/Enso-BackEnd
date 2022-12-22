@@ -50,19 +50,20 @@ function Guardar_Perfil_Cor($perfil){
         'const' =>12,
     ];
     $contra = password_hash($perfil->pass1,PASSWORD_BCRYPT,$opt);
-    $sentencia = $db->prepare("INSERT INTO cordinador (nombre,pass,correo,documento,apellido,codigo) VALUES (?, ?, ? ,? ,? ,?)");
-    $sentencia -> bindValue(1,$perfil->Nombres,PDO::PARAM_STR);
-    $sentencia -> bindValue(2,$contra,PDO::PARAM_STR);
-    $sentencia -> bindValue(3,$perfil->email,PDO::PARAM_STR);
-    $sentencia -> bindValue(4,$perfil->CC,PDO::PARAM_INT);
-    $sentencia -> bindValue(5,$perfil->Apellidos,PDO::PARAM_STR);
-    $sentencia -> bindValue(6,$perfil->Codigo,PDO::PARAM_STR);
+    $sentencia = $db->prepare("INSERT INTO cordinador (nombre,pass,correo,documento,apellido,codigo) VALUES (:Nombre, :Pass, :Email ,:CC ,:Apellido ,:Codigo)");
+    $sentencia -> bindValue(':Nombre',$perfil->Nombres,PDO::PARAM_STR);
+    $sentencia -> bindValue(':Pass',$contra,PDO::PARAM_STR);
+    $sentencia -> bindValue(':Email',$perfil->email,PDO::PARAM_STR);
+    $sentencia -> bindValue(':CC',$perfil->CC,PDO::PARAM_INT);
+    $sentencia -> bindValue(':Apellido',$perfil->Apellidos,PDO::PARAM_STR);
+    $sentencia -> bindValue(':Codigo',$perfil->Codigo,PDO::PARAM_STR);
     return $sentencia->execute();
 }
 function db_buscar_email($dato){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM cordinador WHERE correo = ?");
-    $consulta -> execute([$dato]);
+    $consulta = $db->prepare("SELECT * FROM cordinador WHERE correo = :Email");
+    $consulta -> bindValue(':Email',$dato,PDO::PARAM_STR);
+    $consulta -> execute();
     $fin = $consulta->rowCount();
     return $fin;
 }

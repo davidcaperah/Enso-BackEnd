@@ -7,9 +7,9 @@ $email = db_buscar_email($perfil->email);
 // $codi = "david";
 // $email = "ffsafsafas@gmail.com";
 if($email <= 0){
-      if($codi == true){
+      if($codi > 0){
             $resultado = Guardar_Perfil_Cor($perfil);
-            $BorrarCod = Borrar_Cod($perfil->Codigo);
+            // $BorrarCod = Borrar_Cod($perfil->Codigo);
             if($resultado){
 
                   $id = Buscar_codcor($perfil->email);
