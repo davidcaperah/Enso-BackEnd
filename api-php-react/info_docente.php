@@ -118,6 +118,10 @@ if(isset($data)){
         case 17:
             $devuelta = ver_nota($data);
         break;
+        case 18:
+            $devuelta = Notas_materias_curso($data); 
+        break;
+
     }
     echo json_encode($devuelta);
 }else{
