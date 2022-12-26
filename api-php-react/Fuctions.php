@@ -53,7 +53,6 @@ function Guardar_Perfil_Cor($perfil){
     $contra = password_hash($perfil->pass1,PASSWORD_BCRYPT,$opt);
     $sentencia = $db->prepare("INSERT INTO cordinador (nombre,pass,correo,documento,apellido,codigo) VALUES (?, ?, ? ,? ,? ,?)");
     $sentencia -> bindValue(1,$perfil->Nombres,PDO::PARAM_STR);
-    bindParam(':iddoc',$data->col,PDO::PARAM_INT);
     $sentencia -> bindParam(2,$contra,PDO::PARAM_STR);
     $sentencia -> bindValue(3,$perfil->email,PDO::PARAM_STR);
     $sentencia -> bindValue(4,$perfil->CC,PDO::PARAM_INT);
