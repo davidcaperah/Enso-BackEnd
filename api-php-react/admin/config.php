@@ -4,7 +4,7 @@ date_default_timezone_set('America/Bogota');
 function Borrar_qr($date){
   $db = obtenerConexion();
   $consulta = $db ->prepare("DELETE FROM qr WHERE id = :id");
-  $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+  $consulta -> bindParam(':id',$date->id,PDO::PARAM_INT);
   $consulta ->execute();
   return $consulta->fetchAll();
 }
