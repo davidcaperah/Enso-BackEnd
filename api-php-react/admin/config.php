@@ -59,6 +59,16 @@ function Ver_super_correo($correo){
   $consulta ->execute();
   return $consulta->rowCount();
 }
+function Ver_super($id){
+  $db = obtenerConexion();
+  $consulta = $db -> prepare("SELECT admin.id,admin.Apellido,admin.Correo,admin.Tipo,admin.Nombre, roles.Nombre as rol, roles.Descripcion 
+  FROM admin 
+  INNER JOIN roles ON admin.Tipo = roles.id  
+  WHERE admin.id = :id");
+  $consulta -> bindParam(':id',$id,PDO::PARAM_STR);
+  $consulta ->execute();
+  return $consulta->fetch();
+}
 //correos
 function correo_cambio($data){
   $fecha = date("d-m-Y");
