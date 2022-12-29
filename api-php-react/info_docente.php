@@ -121,6 +121,9 @@ if(isset($data)){
         case 18:
             $devuelta = Notas_materias_curso($data); 
         break;
+        case 19:
+            $devuelta = Cargar_evaluacion_aulas($data); 
+        break;
 
     }
     echo json_encode($devuelta);

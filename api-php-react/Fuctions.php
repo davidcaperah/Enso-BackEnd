@@ -1651,6 +1651,13 @@ function Cargar_evaluacion_m($data){
     $consulta ->execute();
     return $consulta->fetchAll();
 }
+function Cargar_evaluacion_aulas($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM evalucion WHERE id_curso = :id_curso");
+    $consulta -> bindParam(':id_curso',$data->id_curso,PDO::PARAM_INT);
+    $consulta ->execute();
+    return $consulta->fetchAll();
+}
 function Cargar_evaluacion_E($data){
     $db = obtenerConexion();
     $consulta = $db ->prepare("SELECT evalucion.*,materias.N_Materia, materias.id as idmateria FROM evalucion INNER JOIN materias ON evalucion.idm = materias.id WHERE id_curso = :id_curso");
