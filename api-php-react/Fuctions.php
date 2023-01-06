@@ -1916,7 +1916,7 @@ function cargar_actividad_aula_cali($data){
 }
 function cargar_actividad_cd($data){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT profesores.Nombre as Nprofesor,profesores.apellido,materias.N_Materia,actividad_hyg.* FROM actividad_hyg INNER JOIN materias ON actividad_hyg.materia = materias.id INNER JOIN profesores ON actividad_hyg.id_Profesor = profesores.id WHERE actividad_hyg.id_profesor = :idp order by id desc");
+    $consulta = $db ->prepare("SELECT profesores.Nombre as Nprofesor,profesores.apellido,materias.N_Materia,actividad_hyg.* FROM actividad_hyg INNER JOIN materias ON actividad_hyg.materia = materias.id INNER JOIN profesores ON actividad_hyg.id_Profesor = profesores.id WHERE actividad_hyg.id_Profesor = :idp order by id desc");
     $consulta -> bindParam(':idp',$data->idP,PDO::PARAM_INT);
     $consulta ->execute();
     return $consulta->fetchAll();
