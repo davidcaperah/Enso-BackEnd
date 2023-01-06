@@ -124,6 +124,9 @@ if(isset($data)){
         case 19:
             $devuelta = Cargar_evaluacion_aulas($data); 
         break;
+        case 20:
+            $devuelta = Promedio_estudiante_p($data); 
+        break;
 
     }
     echo json_encode($devuelta);

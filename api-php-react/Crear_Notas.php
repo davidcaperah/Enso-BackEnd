@@ -15,7 +15,7 @@ if(isset($data)){
                     $estado_evares = cambiar_estado_evares($data);
                 }
                 $cambiar_e = Cambiar_estado_act(5,$data->id_solucion);
-                $C_notas = Contar_Notas($data->id_estu,$data->id_materia);
+                $C_notas = Contar_Notas($data->id_estu,$data->id_materia,$data->periodo);
                 $C_notas_e = contar_notas_e($data->id_estu);
                 $C_promedio = Contar_promedio_Cur($data->id_curso);
                 $C_promedio_col =  Contar_promedio_Col($data->id_colegio);
@@ -45,12 +45,13 @@ if(isset($data)){
                     $promedio = $resultado/$C_promedio;
                     if(isset($promedio)){
                         $promedio_cur = cambiar_promedio_Cur($data->id_curso,$promedio);
+                        
                     }else{
                         $devuelta = array('mensaje error'=>'error al cargar');
                     }
+
                 }else{
                     $devuelta = array('mensaje error'=>$C_promedio);
-   
                 }
                 if($C_notas_e > 0){
                     $notas = sacar_notas_e($data->id_estu);
@@ -70,7 +71,7 @@ if(isset($data)){
                 }
 
                 if($C_notas > 0){
-                    $notas = Sacar_nota($data->id_estu,$data->id_materia);
+                    $notas = Sacar_nota($data->id_estu,$data->id_materia,$data->periodo);
                     $suma = 0;
                     foreach($notas as &$nota){
                         $resultado =  $suma + $nota->id_nota;
@@ -78,9 +79,9 @@ if(isset($data)){
                     }
                     $promedio = $resultado/$C_notas;
                     if(isset($promedio)){
-                        $detectar = detectar_promedio($data->id_estu,$data->id_materia);
+                        $detectar = detectar_promedio($data->id_estu,$data->id_materia,$data->periodo);
                         if($detectar > 0){
-                            $promedio_m_e = cambiar_promedio($data->id_estu,$promedio,$data->id_materia);
+                            $promedio_m_e = cambiar_promedio($data->id_estu,$promedio,$data->id_materia,$data->periodo);
                         }else{
                             $promedio_m_e = insertar_promedio($data,$promedio);
                         }

@@ -1433,8 +1433,8 @@ function Cargar_libro_aula($id){
 //Notas
 function Crear_Nota($data){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("INSERT INTO notas (id_estu, id_docente, id_colegio,id_curso,id_materia,id_actividad,id_nota,comentario,tipo) 
-    VALUES (:id_estu, :id_docente, :id_colegio,:id_curso,:id_materia,:id_actividad,:id_nota,:comentario,:tipo)");
+    $consulta = $db ->prepare("INSERT INTO notas (id_estu, id_docente, id_colegio,id_curso,id_materia,id_actividad,id_nota,comentario,tipo,periodo) 
+    VALUES (:id_estu, :id_docente, :id_colegio,:id_curso,:id_materia,:id_actividad,:id_nota,:comentario,:tipo,:periodo)");
     $consulta->bindValue("id_estu",$data->id_estu,PDO::PARAM_INT);
     $consulta->bindValue("id_docente",$data->id_docente,PDO::PARAM_INT);
     $consulta->bindValue("id_colegio",$data->id_colegio,PDO::PARAM_INT);
@@ -1444,16 +1444,27 @@ function Crear_Nota($data){
     $consulta->bindValue("id_nota",$data->id_nota,PDO::PARAM_INT);
     $consulta->bindValue("comentario",$data->comentario,PDO::PARAM_STR);
     $consulta->bindValue("tipo",$data->tipo,PDO::PARAM_INT);
+    $consulta->bindValue("periodo",$data->periodo,PDO::PARAM_INT);
     return $consulta ->execute();
 }
-function Contar_Notas($ide,$idm){
+function Contar_Notas($ide,$idm,$periodo){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM notas WHERE id_materia = :id_materia AND id_estu = :id_estu");
+    $consulta = $db->prepare("SELECT * FROM notas WHERE id_materia = :id_materia AND id_estu = :id_estu AND periodo = :periodo");
     $consulta->bindValue("id_materia",$idm,PDO::PARAM_INT);
     $consulta->bindValue(":id_estu",$ide,PDO::PARAM_INT);
+    $consulta->bindValue(":periodo",$periodo,PDO::PARAM_INT);
     $consulta -> execute();
     $fin = $consulta->rowCount();
     return $fin;
+}
+function Promedio_estudiante_p ($data) {
+    $db = obtenerConexion();
+    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_estu = :id_estu AND id_col = : id_col");
+    $consulta->bindValue("id_estu",$data->id_estudiante,PDO::PARAM_INT);
+    $consulta->bindValue(":id_col"$data->id_col,PDO::PARAM_INT);
+    $consulta -> execute();
+    $fin = $consulta->rowCount();
+    return $fin; 
 }
 function ver_nota($data){
     $db = obtenerConexion();
@@ -1464,38 +1475,42 @@ function ver_nota($data){
     $consulta -> execute();
     return $consulta->fetch();
 }
-function Sacar_nota($ide,$idm){
+function Sacar_nota($ide,$idm,$periodo){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT id_nota FROM notas WHERE id_materia = :id_materia AND id_estu = :id_estu");
+    $consulta = $db->prepare("SELECT id_nota FROM notas WHERE id_materia = :id_materia AND id_estu = :id_estu AND periodo = :periodo");
     $consulta->bindValue("id_materia",$idm,PDO::PARAM_INT);
     $consulta->bindValue(":id_estu",$ide,PDO::PARAM_INT);
+    $consulta->bindValue(":periodo",$periodo,PDO::PARAM_INT);
     $consulta -> execute();
     return $consulta->fetchAll();
 }
-function cambiar_promedio($ide,$promedio,$idm){
+function cambiar_promedio($ide,$promedio,$idm,$periodo){
     $db = obtenerConexion();
-    $consulta = $db->prepare("UPDATE promedio SET promedio = :promedio WHERE promedio.id_estu =:id AND promedio  .id_materia = :materia ");
+    $consulta = $db->prepare("UPDATE promedio SET promedio = :promedio WHERE promedio.id_estu =:id AND promedio  .id_materia = :materia AND periodo = :periodo");
     $consulta ->bindParam(':promedio',$promedio,PDO::PARAM_INT);
     $consulta ->bindParam(':materia',$idm,PDO::PARAM_INT);
     $consulta ->bindParam(':id',$ide,PDO::PARAM_INT);
+    $consulta ->bindParam(':periodo',$periodo,PDO::PARAM_INT);
     return $consulta -> execute();
 }
 function insertar_promedio($data,$promedio){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("INSERT INTO promedio (id_col,id_estu,promedio,id_curso,id_materia) VALUES 
-    (:id_col,:id_estu,:promedio,:id_curso,:id_materia)"); 
+    $consulta = $db ->prepare("INSERT INTO promedio (id_col,id_estu,promedio,id_curso,id_materia,periodo) VALUES 
+    (:id_col,:id_estu,:promedio,:id_curso,:id_materia,:periodo)"); 
     $consulta -> bindParam(':id_col',$data->id_colegio,PDO::PARAM_INT);
     $consulta -> bindParam(':id_estu',$data->id_estu,PDO::PARAM_INT);
     $consulta -> bindParam(':promedio',$promedio,PDO::PARAM_STR);
     $consulta -> bindParam(':id_curso',$data->id_curso,PDO::PARAM_STR);
     $consulta -> bindParam(':id_materia',$data->id_materia,PDO::PARAM_STR);
+    $consulta -> bindParam(':periodo',$data->periodo,PDO::PARAM_INT);
     return $consulta -> execute();
 }
-function detectar_promedio($ide,$idm){
+function detectar_promedio($ide,$idm,$periodo){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_materia = :id_materia AND id_estu = :id_estu");
+    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_materia = :id_materia AND id_estu = :id_estu AND periodo = :periodo");
     $consulta->bindValue("id_materia",$idm,PDO::PARAM_INT);
     $consulta->bindValue(":id_estu",$ide,PDO::PARAM_INT);
+    $consulta->bindValue(":periodo",$periodo,PDO::PARAM_INT);
     $consulta -> execute();
     $fin = $consulta->rowCount();
     return $fin;
@@ -2041,11 +2056,21 @@ function Buscador_libros($data){
     $results = $statement->fetchAll();
     return $results;
 }
+// function paginacion($limit,$pagina,$tabla){
+//     $pagina = empty($pagina)? $pagina : 1;
+//     $offset = ($pagina - 1) * $limit;
+//     $db = obtenerConexion();
+//     $consulta = $db ->prepare("SELECT count(*) AS conteo FROM ?");
+//     $consulta -> bindParam(':tabla',$data->,PDO::PARAM_STR);
+//     $consulta ->execute();
+//     $conteo = $consulta->fetchObject()->conteo;
+//     var_dump
+// }
 function Cargar_cali_libro($data){
     $db = obtenerConexion();
     $consulta = $db ->prepare("SELECT estrellas FROM db_libros WHERE id =:id");
     $consulta -> bindParam(':id',$data->id,PDO::PARAM_STR);
-    $consulta ->execute();
+   
     return $consulta->fetchObject();
 }
 function Calificar_libro_estrellas($datos,$data){
