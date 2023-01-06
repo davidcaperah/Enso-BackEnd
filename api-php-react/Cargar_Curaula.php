@@ -3,7 +3,7 @@ include_once ('corn.php');
 $data = json_decode(file_get_contents('php://input'));
 include_once ('Fuctions.php');
 if(isset($data)){
-    $consulta = Buscar_curaula($data->id);
+    $consulta = Buscar_Curaula($data->id);
     $hola = json_encode($consulta);
     echo $hola;
 }else{
