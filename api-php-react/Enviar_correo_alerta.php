@@ -1,10 +1,9 @@
 <?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require '/xampp/htdocs/EnsoLearningBackend/api-php-react/PHPMailer-master/src/Exception.php';
-require '/xampp/htdocs/EnsoLearningBackend/api-php-react/PHPMailer-master/src/PHPMailer.php';
-require '/xampp/htdocs/EnsoLearningBackend/api-php-react/PHPMailer-master/src/SMTP.php';
+require './PHPMailer-master/src/Exception.php';
+require './PHPMailer-master/src/PHPMailer.php';
+require './PHPMailer-master/src/SMTP.php';
 
 function enviar_correo($correo,$enviar){
     $mail = new PHPMailer(true);

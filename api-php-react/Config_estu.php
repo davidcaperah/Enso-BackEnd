@@ -2,7 +2,7 @@
 include_once ('corn.php');
 $data = json_decode(file_get_contents('php://input'));
 include_once ('Fuctions.php');
-include_once('../api-php-react/Enviar_correo_alerta.php');
+include_once('./Enviar_correo_alerta.php');
 date_default_timezone_set('America/Bogota');
 if(isset($data)){
     $st = $data->d;
