@@ -1459,12 +1459,11 @@ function Contar_Notas($ide,$idm,$periodo){
 }
 function Promedio_estudiante_p ($data) {
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_estu = :id_estu AND id_col = : id_col");
+    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_estu = :id_estu AND id_col = :id_col");
     $consulta->bindValue("id_estu",$data->id_estudiante,PDO::PARAM_INT);
     $consulta->bindValue(":id_col",$data->id_col,PDO::PARAM_INT);
     $consulta -> execute();
-    $fin = $consulta->rowCount();
-    return $fin; 
+    return$consulta->fetchAll();; 
 }
 function ver_nota($data){
     $db = obtenerConexion();
@@ -2113,7 +2112,8 @@ function Cargar_libros($data){
     $consulta = $db ->prepare("SELECT * FROM `db_libros` LIMIT 10 OFFSET :est");
     $consulta -> bindParam(':est',$paginas['ofsset'],PDO::PARAM_INT);
     $consulta ->execute();
-    return  $consulta->fetchAll();;
+    $rest = ["libros"=>$consulta->fetchAll(),"paginas"=>$paginas];
+    return $rest;
 }
 function paginacion($limit,$pagina,$tabla){
     $pagina = !empty($pagina)? $pagina : 1;
