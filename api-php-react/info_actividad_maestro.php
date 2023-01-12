@@ -49,7 +49,7 @@ if(isset($data)){
         break;
         case 8:
             $devuelta = vence_actividad_estado($data);
-        break;        
+        break;       
     }
     echo json_encode($devuelta);
 }else{

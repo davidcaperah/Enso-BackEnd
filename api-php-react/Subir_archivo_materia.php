@@ -3,8 +3,8 @@ include_once ('corn.php');
 include_once ('Hosting.php');
 $data = json_decode(file_get_contents('php://input'));
 $response = array();
+$pruebas = 
 $upload_dir = $_SERVER['DOCUMENT_ROOT']."/api/EnsoLearningBackend/Archivos_u/iconos/";
-$server_url = $_servidor."api/EnsoLearningBackend/Archivos_u/iconos/";
 if($_FILES['archivo']){
     $archivo_name = $_FILES["archivo"]["name"];
     $archivos_tmp_Name = $_FILES["archivo"]["tmp_name"];

@@ -7,16 +7,19 @@ if(isset($data)){
     $devuelta = '';
     switch($st){
         case 0:
-            $devuelta = C_genero($data);
+            $devuelta = Crear_actividad_libro($data);
         break;
         case 1:
-            $devuelta = Crear_Genero($data);
+            $devuelta = Cargar_actividad_libro($data);
         break;
         case 2:
-            $devuelta = Editar_Genero($data);
+            $devuelta = Editar_actividad_libro($data);
+        break;
+        case 3:
+            $devuelta = Borrar_actividad_libro($data);
         break;
     }
-    echo json_encode($devuelta); 
+    echo json_encode($devuelta);
 }else{
     echo json_encode(array('mensaje'=>'no llegaron datos'));
 }

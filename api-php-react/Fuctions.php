@@ -2017,6 +2017,56 @@ function Editar_Autor($datos){
     $consulta ->bindValue(':genero',$datos->genero,PDO::PARAM_INT);
     return $consulta->execute();
 }
+// actividades libro
+function Crear_actividad_libro($data){
+    $db =obtenerConexion();
+    $puntos = json_encode($data->puntos);
+    $hoy = date("Y-m-d H:i:s");
+    $consulta = $db ->prepare ("INSERT INTO actividad_libro (Nombre,Descripcion,libro,puntos,pagina,Tipo,Fecha_Creacion,creador,editor) VALUES
+    (:Nombre,:Descripcion,:libro,:puntos,:pagina,:Tipo,:Fecha_Creacion,:creador,:editor)");
+    $consulta -> bindValue(':Nombre',$data->Nombre,PDO::PARAM_STR);
+    $consulta -> bindParam(':Descripcion',$data->Descripcion,PDO::PARAM_STR);
+    $consulta -> bindValue(':libro',$data->libro,PDO::PARAM_STR);
+    $consulta -> bindParam(':puntos',$puntos,PDO::PARAM_STR);
+    $consulta -> bindValue(':pagina',$data->pagina,PDO::PARAM_INT);
+    $consulta -> bindValue(':Tipo',$data->Tipo,PDO::PARAM_INT);
+    $consulta -> bindValue(':Fecha_Creacion',$hoy,PDO::PARAM_STR);
+    $consulta -> bindValue(':creador',$data->creador,PDO::PARAM_STR);
+    $consulta -> bindValue(':editor',$data->editor,PDO::PARAM_STR);
+
+    return $consulta -> execute();
+}
+function Cargar_actividad_libro($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM actividad_libro WHERE id =:id");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta -> execute();
+    return $consulta->fetchObject(); 
+}
+function Editar_actividad_libro($data){
+    $db = obtenerConexion();
+    $puntos = json_encode($data->puntos);
+    $hoy = date("Y-m-d H:i:s");
+    $consulta = $db->prepare("UPDATE actividad_libro SET Nombre = :Nombre, Descripcion = :Descripcion, libro = :libro, puntos = :puntos, pagina = :pagina, 
+    Tipo = :Tipo, editor = :editor, Fecha_editar=:Fecha_editar WHERE id =:id");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta -> bindValue(':Nombre',$data->Nombre,PDO::PARAM_STR);
+    $consulta -> bindParam(':Descripcion',$data->Descripcion,PDO::PARAM_STR);
+    $consulta -> bindValue(':libro',$data->libro,PDO::PARAM_STR);
+    $consulta -> bindParam(':puntos',$puntos,PDO::PARAM_STR);
+    $consulta -> bindValue(':pagina',$data->pagina,PDO::PARAM_INT);
+    $consulta -> bindValue(':Tipo',$data->Tipo,PDO::PARAM_INT);
+    $consulta -> bindValue(':editor',$data->editor,PDO::PARAM_STR);
+    $consulta -> bindValue(':Fecha_editar',$hoy,PDO::PARAM_STR);
+    return $consulta -> execute();
+}
+function Borrar_actividad_libro($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("DELETE FROM actividad_libro WHERE id = :id");
+    $consulta -> bindValue(':id',$data->id,PDO::PARAM_INT);
+    return $consulta->execute();
+}
+//fin activiades libros
 function Crear_libros($data){
     $db =obtenerConexion();
     $estrellas = 0;
@@ -2036,9 +2086,10 @@ function Crear_libros($data){
     $consulta -> bindParam(':libro',$data->pdf,PDO::PARAM_STR);
     return $consulta -> execute();
 }
+
 function Buscador_libros($data){
     $db =obtenerConexion();
-    $sql = 'SELECT * FROM db_libros WHERE 1';
+    $sql = 'SELECT * FROM db_libros INNER JOIN generos ON db_libros.genero = generos.id WHERE 1';
     $seach_terms = isset($data->nombre) ? $data->nombre :' ';
     $buscar_array = explode(' ',$seach_terms);
 
@@ -2056,16 +2107,25 @@ function Buscador_libros($data){
     $results = $statement->fetchAll();
     return $results;
 }
-// function paginacion($limit,$pagina,$tabla){
-//     $pagina = empty($pagina)? $pagina : 1;
-//     $offset = ($pagina - 1) * $limit;
-//     $db = obtenerConexion();
-//     $consulta = $db ->prepare("SELECT count(*) AS conteo FROM ?");
-//     $consulta -> bindParam(':tabla',$data->,PDO::PARAM_STR);
-//     $consulta ->execute();
-//     $conteo = $consulta->fetchObject()->conteo;
-//     var_dump
-// }
+function Cargar_libros($data){
+    $paginas = paginacion(10,$data->pagina,"db_libros");
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM `db_libros` LIMIT 10 OFFSET :est");
+    $consulta -> bindParam(':est',$paginas['ofsset'],PDO::PARAM_INT);
+    $consulta ->execute();
+    return  $consulta->fetchAll();;
+}
+function paginacion($limit,$pagina,$tabla){
+    $pagina = !empty($pagina)? $pagina : 1;
+    $offset = ($pagina - 1) * $limit;
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT count(*) AS conteo FROM $tabla");
+    $consulta ->execute();
+    $conteo = $consulta->fetchObject();
+    $conteo = $conteo->conteo;
+    $total_paginas = ceil( $conteo/$limit);
+    return ["pagina"=>$pagina,"ofsset"=>$offset,"total_paginas"=>$total_paginas];
+}
 function Cargar_cali_libro($data){
     $db = obtenerConexion();
     $consulta = $db ->prepare("SELECT estrellas FROM db_libros WHERE id =:id");
@@ -2085,7 +2145,7 @@ function Calificar_libro_estrellas($datos,$data){
 }
 function Cargar_cali_libro_p($data){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT personas FROM db_libros WHERE id =:id");
+    $consulta = $db ->prepare("SELECT personas FROM db_libros  WHERE id =:id");
     $consulta -> bindParam(':id',$data->id,PDO::PARAM_STR);
     $consulta ->execute();
     return $consulta->fetchObject();

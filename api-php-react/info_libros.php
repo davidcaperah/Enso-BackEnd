@@ -22,6 +22,7 @@ if(isset($data)){
             }
         break;
         case 2:
+
             $desi = Cargar_voto($data);
             if(empty($desi->libro)){
                 $contar = 0;
@@ -56,6 +57,7 @@ if(isset($data)){
             // $devuelta = $info;
         break;
         case 3:
+            $devuelta = Cargar_libros($data);
         break;
     }
     echo json_encode($devuelta);
