@@ -43,7 +43,7 @@ if(isset($data)){
             $devuelta = Cargar_docentes_estu($data->col);
         break;
         case 6:
-            $promedios = Medir_promedios($data->col);
+            $promedios = Medir_promedios($data);
             arsort($promedios);
             $array = array();
             $i = 1;
@@ -56,7 +56,7 @@ if(isset($data)){
                 "puesto"=>$i);
                 array_push($array,$est);
                 $i++;
-                $devuelta = array_slice($array,0,5);    
+                $devuelta = $promedios;    
                 }  
         break;
         case 7:

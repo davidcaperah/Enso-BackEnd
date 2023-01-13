@@ -1016,12 +1016,14 @@ function Cargar_docentes_estu($datos){
     $consulta->execute();
     return $consulta->fetchAll();
 }
-function Medir_promedios($col){
+function Medir_promedios($data){
     $db = ObtenerConexion();
+    $pagina = paginacion(10,$data->pagina,"estudiantes");
     $consulta = $db ->prepare("SELECT estudiantes.promedio,estudiantes.id,estudiantes.Nombre,estudiantes.Apellido,estudiantes.imagen,estudiantes.Curso,cur.Curso_Nu FROM estudiantes
     INNER JOIN cursos cur ON estudiantes.Curso = cur.id 
-    WHERE id_colegio = :id_colegio");
-    $consulta->bindParam(':id_colegio',$col,PDO::PARAM_INT);
+    WHERE id_colegio = :id_colegio ORDER BY estudiantes.promedio DESC LIMIT 10 OFFSET :est");
+    $consulta->bindParam(':id_colegio',$data->col,PDO::PARAM_INT);
+    $consulta->bindParam(':est',$paginas['ofsset'],PDO::PARAM_INT);
     $consulta->execute();
     return $consulta->fetchAll();
 }
@@ -1459,9 +1461,10 @@ function Contar_Notas($ide,$idm,$periodo){
 }
 function Promedio_estudiante_p ($data) {
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_estu = :id_estu AND id_col = :id_col");
+    $consulta = $db->prepare("SELECT * FROM promedio WHERE id_estu = :id_estu AND id_col = :id_col AND id_materia = :id_materia");
     $consulta->bindValue("id_estu",$data->id_estudiante,PDO::PARAM_INT);
     $consulta->bindValue(":id_col",$data->id_col,PDO::PARAM_INT);
+    $consulta->bindValue(":id_materia",$data->id_materia,PDO::PARAM_INT);
     $consulta -> execute();
     return$consulta->fetchAll();; 
 }

@@ -32,9 +32,6 @@ if(isset($data)){
             $devuelta = Cargar_preguntas_eva($data->idm);
             break;
         case 3:
-            /// este consulta las eva
-            var_dump($data);
-            exit;
             $h = $data->horas;
             $m = $data->minutos;
             $s = $data->segundos;
