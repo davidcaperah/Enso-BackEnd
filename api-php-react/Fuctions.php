@@ -460,7 +460,7 @@ function Buscar_colcor($id){
 }
 function Buscar_colcod($cod){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM Cursos WHERE cod = ?");
+    $consulta = $db->prepare("SELECT * FROM cursos WHERE cod = ?");
     $consulta -> bindValue(1,$cod);
     $consulta -> execute();
     return $consulta -> fetchObject();
@@ -978,7 +978,7 @@ function Entregar_actividad($datos){
 }
 function Cargar_actividad($datos){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT solucion.*, es.Nombre as Nombree,es.Apellido as Apellidoe, est.nombre as n_estado, curso.Curso_Nu as n_curso, Act.puntos as puntos FROM solucion
+    $consulta = $db ->prepare("SELECT solucion.*, acr.periodo as periodo,es.Nombre as Nombree,es.Apellido as Apellidoe, est.nombre as n_estado, curso.Curso_Nu as n_curso, Act.puntos as puntos FROM solucion
     INNER JOIN estudiantes es ON solucion.id_estu = es.id
     INNER JOIN estado_actividad est ON solucion.estado = est.id_a
     INNER JOIN cursos curso ON solucion.id_curso = curso.id
@@ -1018,12 +1018,10 @@ function Cargar_docentes_estu($datos){
 }
 function Medir_promedios($data){
     $db = ObtenerConexion();
-    $pagina = paginacion(10,$data->pagina,"estudiantes");
     $consulta = $db ->prepare("SELECT estudiantes.promedio,estudiantes.id,estudiantes.Nombre,estudiantes.Apellido,estudiantes.imagen,estudiantes.Curso,cur.Curso_Nu FROM estudiantes
     INNER JOIN cursos cur ON estudiantes.Curso = cur.id 
-    WHERE id_colegio = :id_colegio ORDER BY estudiantes.promedio DESC LIMIT 10 OFFSET :est");
+    WHERE id_colegio = :id_colegio ORDER BY estudiantes.promedio DESC LIMIT 10");
     $consulta->bindParam(':id_colegio',$data->col,PDO::PARAM_INT);
-    $consulta->bindParam(':est',$paginas['ofsset'],PDO::PARAM_INT);
     $consulta->execute();
     return $consulta->fetchAll();
 }

@@ -44,7 +44,6 @@ if(isset($data)){
         break;
         case 6:
             $promedios = Medir_promedios($data);
-            arsort($promedios);
             $array = array();
             $i = 1;
             foreach($promedios as $key){
