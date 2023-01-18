@@ -880,7 +880,7 @@ function Cargar_Estucur($id_curso){
 }
 function Cargar_Estu_contr($data){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT Nombre,Apellido,Correo,Puntos,Ciclo,imagen FROM estudiantes WHERE id = ?");
+    $consulta = $db->prepare("SELECT Nombre,Apellido,Correo,Puntos,Ciclo,imagen,id_colegio,Id_curso FROM estudiantes WHERE id = ?");
     $consulta -> bindValue(1,$data->id,PDO::PARAM_INT);
     $consulta -> execute();
     return $consulta->fetchObject();
@@ -1316,6 +1316,13 @@ function crear_aulaest($datos,$id_curso){
     $consulta ->bindValue(3,$id_curso,PDO::PARAM_STR);
     $consulta ->bindValue(4,$info,PDO::PARAM_STR);
     return $consulta->execute();
+}
+function Cargar_aulas_estudiante($id){
+    $db = obtenerConexion();
+    $consulta = $db->prepare("SELECT * FROM `aula` where Id_curso = :id");
+    $consulta ->bindValue(':id',$id,PDO::PARAM_INT);
+    $consulta ->execute();
+    return $consulta->fetchAll();
 }
 function Buscar_aula($id){
     $db = obtenerConexion();

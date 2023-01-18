@@ -76,6 +76,9 @@ if(isset($data)){
         case 12:
             $devuelta = Verificar_estado_privacidad($data);
         break;
+        case 13:
+            $devuelta = Cargar_aulas_estudiante($data->id);
+        break;
         
     }
     echo json_encode($devuelta);
