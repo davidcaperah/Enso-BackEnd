@@ -1437,6 +1437,40 @@ function Cargar_libro_aula($id){
     $consulta ->execute();
     return $consulta ->fetchAll();
 }
+//notas aulas
+function Crear_Nota_aulas($data){
+    $db = obtenerConexion();
+    $fecha = date("Y-m-d H:i:s");  
+    $consulta = $db ->prepare("INSERT INTO notas_aulas (fecha_crear, nota, aula) 
+    VALUES (:fecha_crear, :nota, :aula)");
+    $consulta->bindValue("fecha_crear",$fecha,PDO::PARAM_STR);
+    $consulta->bindValue("nota",$data->nota,PDO::PARAM_STR);
+    $consulta->bindValue("aula",$data->aula,PDO::PARAM_INT);
+    return $consulta ->execute();
+}
+function Editar_Nota_aulas($data){
+    $db = obtenerConexion();
+    $consulta = $db->prepare("SELECT version FROM notas_aulas WHERE id = :id");
+    $consulta->bindValue("id",$data->id,PDO::PARAM_INT);
+    $consulta -> execute();
+    $version = $consulta->fetch();
+    $version = $version->version;
+    $version++;
+    $fecha = date("Y-m-d H:i:s");  
+    $consulta = $db->prepare("UPDATE notas_aulas SET fecha_editar = :fecha_editar, nota = :nota, version = :version WHERE id = :id");
+    $consulta ->bindParam(':fecha_editar',$fecha,PDO::PARAM_STR);
+    $consulta ->bindParam(':nota',$data->nota,PDO::PARAM_STR);
+    $consulta ->bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta ->bindParam(':version',$version,PDO::PARAM_INT);
+    return $consulta ->execute();
+}
+function Cargar_nota_aulas($data){
+    $db = obtenerConexion();
+    $consulta = $db->prepare("SELECT * FROM notas_aulas WHERE aula = :aula ORDER BY id ASC LIMIT 10");
+    $consulta->bindValue(":aula",$data->aula,PDO::PARAM_INT);
+    $consulta -> execute();
+    return $consulta->fetchAll();
+}
 //Notas
 function Crear_Nota($data){
     $db = obtenerConexion();
