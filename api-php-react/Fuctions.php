@@ -1465,11 +1465,24 @@ function Editar_Nota_aulas($data){
     return $consulta ->execute();
 }
 function Cargar_nota_aulas($data){
+    $paginas = "";
+    $paginas = paginacion(10,$data->pagina,"notas_aulas");
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT * FROM notas_aulas WHERE aula = :aula ORDER BY id ASC LIMIT 10");
+    $consulta = $db->prepare("SELECT notas_aulas.*, materias.N_Materia FROM notas_aulas 
+    INNER JOIN aula ON notas_aulas.aula = aula.id
+    INNER JOIN materias ON aula.id_Mat = materias.id
+    WHERE aula = :aula ORDER BY id ASC LIMIT 10 OFFSET :oft");
     $consulta->bindValue(":aula",$data->aula,PDO::PARAM_INT);
+    $consulta->bindValue(":oft",$paginas['ofsset'],PDO::PARAM_INT);
     $consulta -> execute();
-    return $consulta->fetchAll();
+    $rest = ["notas_aulas"=>$consulta->fetchAll(),"paginas"=>$paginas];
+    return $rest;
+}
+function Eliminar_nota_aulas($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("DELETE FROM notas_aulas WHERE id = :id");
+    $consulta -> bindValue(':id',$data->id,PDO::PARAM_INT);
+    return $consulta->execute();
 }
 //Notas
 function Crear_Nota($data){
@@ -1763,20 +1776,23 @@ function Cargar_preguntas_eva_individual($data){
     $consulta ->execute();
     return $consulta->fetchAll();
 }
-function Crear_nota_eva($data,$nota,$margen,$tiempo){
+function Crear_nota_eva($data,$correctas,$abierta,$calificadas,$tiempo,$datos){
     $estado = 4;
     $fecha = date("Y-m-d H:i:s");  
     $db = obtenerConexion();
-    $consulta = $db ->prepare("INSERT INTO notas_eva (id_estu,id_curso,id_eva,tiempo,resultado,nota,fecha,estado) VALUES 
-    (:id_estu,:id_curso,:id_eva,:tiempo,:resultado,:nota,:fecha,:estado)"); 
+    $dd = json_encode($datos);
+    $consulta = $db ->prepare("INSERT INTO notas_eva (id_estu,id_curso,id_eva,tiempo,resultado,fecha,estado,correctas,abiertas,calificadas) VALUES 
+    (:id_estu,:id_curso,:id_eva,:tiempo,:resultado,:fecha,:estado,:correctas,:abiertas,:calificadas)"); 
     $consulta -> bindParam(':id_estu',$data->id_estu,PDO::PARAM_INT);
     $consulta -> bindParam(':id_curso',$data->id_curso,PDO::PARAM_STR);
     $consulta -> bindParam(':id_eva',$data->id_eva,PDO::PARAM_STR);
-    $consulta -> bindParam(':tiempo',$tiempo,PDO::PARAM_INT);
-    $consulta -> bindParam(':resultado',$data->resultado,PDO::PARAM_STR);
-    $consulta -> bindParam(':nota',$nota,PDO::PARAM_STR);
+    $consulta -> bindParam(':tiempo',$tiempo,PDO::PARAM_STR);
+    $consulta -> bindParam(':resultado',$dd,PDO::PARAM_STR);
     $consulta -> bindParam(':fecha',$fecha,PDO::PARAM_STR);
     $consulta -> bindParam(':estado',$estado,PDO::PARAM_INT);
+    $consulta -> bindParam(':correctas',$correctas,PDO::PARAM_INT);
+    $consulta -> bindParam(':abiertas',$abierta,PDO::PARAM_INT);
+    $consulta -> bindParam(':calificadas',$calificadas,PDO::PARAM_INT);
     $consulta -> execute();
     $con = $db ->prepare("SELECT LAST_INSERT_ID()");
     $con ->execute();
@@ -1801,8 +1817,9 @@ function veri_eva_t($data){
 }
 function Cargar_evaluacion_notas($data){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT notas_eva.*,estu.Nombre as Nombree,estu.Apellido as Apellidoe FROM notas_eva 
+    $consulta = $db ->prepare("SELECT notas_eva.*,estu.Nombre as Nombree,estu.Apellido as Apellidoe, estado_actividad.Nombre as n_estado FROM notas_eva 
     INNER JOIN estudiantes estu ON notas_eva.id_estu = estu.id
+    INNER JOIN estado_actividad ON notas_eva.estado = estado_actividad.id_a
     WHERE id_eva = :id_eva");
     $consulta -> bindParam(':id_eva',$data->id,PDO::PARAM_STR);
     $consulta ->execute();

@@ -15,6 +15,9 @@ if(isset($data)){
         case 2:
             $devuelta = Cargar_nota_aulas($data);
         break;
+        case 3:
+            $devuelta = Eliminar_nota_aulas($data);
+        break;
     }
     echo json_encode($devuelta);
 }else{
