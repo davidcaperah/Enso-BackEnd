@@ -1817,9 +1817,10 @@ function veri_eva_t($data){
 }
 function Cargar_evaluacion_notas($data){
     $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT notas_eva.*,estu.Nombre as Nombree,estu.Apellido as Apellidoe, estado_actividad.Nombre as n_estado FROM notas_eva 
+    $consulta = $db ->prepare("SELECT notas_eva.*,estu.Nombre as Nombree,estu.Apellido as Apellidoe, estado_actividad.Nombre as n_estado, cursos_as.Curso_Nu as curso_nombre FROM notas_eva 
     INNER JOIN estudiantes estu ON notas_eva.id_estu = estu.id
     INNER JOIN estado_actividad ON notas_eva.estado = estado_actividad.id_a
+    INNER JOIN cursos_as ON  notas_eva.id_curso = cursos_as.id_curso
     WHERE id_eva = :id_eva");
     $consulta -> bindParam(':id_eva',$data->id,PDO::PARAM_STR);
     $consulta ->execute();
@@ -2147,7 +2148,7 @@ function Crear_libros($data){
 
 function Buscador_libros($data){
     $db =obtenerConexion();
-    $sql = 'SELECT * FROM db_libros INNER JOIN generos ON db_libros.genero = generos.id WHERE 1';
+    $sql = 'SELECT db_libros.*,generos.id as id_genero,generos.genero  FROM db_libros INNER JOIN generos ON db_libros.genero = generos.id WHERE 1';
     $seach_terms = isset($data->nombre) ? $data->nombre :' ';
     $buscar_array = explode(' ',$seach_terms);
 
