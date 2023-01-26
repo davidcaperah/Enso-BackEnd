@@ -68,12 +68,10 @@ if(isset($data)){
             $aula = Cargar_aula($data);
             $veri = verificar_libro_aula($aula[0]->id);
             if($veri[0]->libro == 0){
-                $devuelta = array("estado" => false ,"mensaje" => "ya tiene un libro en su aula".$veri[0]->libro);
-              
-               
-            }else{
                 $devuelta = array("estado" => Establecer_libro($data->id_libro,$aula[0]->id) 
-               ,"mensaje" => "Libro eliminado".$veri[0]->libro); 
+                ,"mensaje" => "Libro colocado".$veri[0]->libro); 
+            }else{
+                $devuelta = array("estado" => false ,"mensaje" => "ya tiene un libro en su aula, eliminar el libro antes de agregar uno nuevo".$veri[0]->libro);
             }
         break;
         case 9:
@@ -127,7 +125,9 @@ if(isset($data)){
         case 20:
             $devuelta = Promedio_estudiante_p($data); 
         break;
-
+        case 21:
+            $devuelta = Cargar_evaluacion_notas($data); 
+        break;
     }
     echo json_encode($devuelta);
 }else{

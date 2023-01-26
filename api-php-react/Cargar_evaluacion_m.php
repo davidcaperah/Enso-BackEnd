@@ -30,22 +30,42 @@ if(isset($data)){
         break;
         case 2:
             $devuelta = Cargar_preguntas_eva($data->idm);
-            break;
+        break;
         case 3:
-            $h = $data->horas;
-            $m = $data->minutos;
-            $s = $data->segundos;
+            $h = intval($data->horas);
+            $m = intval($data->minutos);
+            $s = intval($data->segundos);
             $hs = $h*3600;
             $ms = $m*60;
-            $time = $hs + $ms + $s - $data->tiempoSalio ;
-            $hrs = round($time / 3600,-1,PHP_ROUND_HALF_DOWN);
-
+            $time_restado = intval($data->tiempoSalio); 
+            $time = $hs + $ms + $s - $time_restado;
+            $hrs = round($time / 3600);
+            $puntos = $devuelta = Cargar_preguntas_eva($data->id_eva);
+            $correctas = 0;
+            $abiertas = 0;
+            $TOTAL_puntos = 0;
+            $datos = [];
+            foreach ($puntos as $key => $valuep) {
+                foreach ($data->respuesta as $key => $value) {
+                    if($value[0] === $valuep->id){
+                        $TOTAL_puntos++;
+                        if($valuep->Tipo == 1){
+                            if( $value[1] == $valuep->respuesta){
+                                $correctas++;
+                            }
+                        }else if($valuep->Tipo == 2){
+                            $abiertas++;
+                                $datos = [...$datos,$valuep->Tipo=>$value];
+                            
+                        }
+                    }
+                }
+            }
             $min = round(($time /60) % 60); 
             $segus = round($time % 60);
             $tiempo = $hrs.":".$min.":".$segus;
-
-            if($final >= 0){
-                $devuelta = Crear_nota_eva($data,$nota,$error,$tiempo);
+            if($TOTAL_puntos >= 0){
+                $devuelta = Crear_nota_eva($data,$correctas,$abiertas,$TOTAL_puntos,$tiempo,$datos);
             }else{
                 $devuelta = "error al calculo";
             }
