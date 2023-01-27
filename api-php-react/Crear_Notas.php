@@ -11,7 +11,7 @@ if(isset($data)){
             $res = Crear_Nota($data);
             if($res){
                 $envia = $data;
-                if(!empty($data->eva)){
+                if(!empty($data->Tipo = 2)){
                     $estado_evares = cambiar_estado_evares($data);
                 }
                 $cambiar_e = Cambiar_estado_act(5,$data->id_solucion);

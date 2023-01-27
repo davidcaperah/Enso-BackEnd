@@ -1829,9 +1829,19 @@ function Cargar_evaluacion_notas($data){
 function cambiar_estado_evares($data){
     $db = obtenerConexion();
     $estado = 5;
-    $consulta = $db->prepare("UPDATE notas_eva SET estado = :estado WHERE id =:id");
+    $consulta = $db->prepare("UPDATE notas_eva SET estado = :estado, nota = :nota WHERE id =:id");
+    $consulta ->bindParam(':estado',$estado,PDO::PARAM_INT);
+    $consulta ->bindParam(':id',$data->id_solucion,PDO::PARAM_INT);
+    $consulta ->bindParam(':nota',$data->id_nota,PDO::PARAM_INT);
+    return $consulta -> execute();
+}
+function Calificar_evaluacion($data){
+    $db = obtenerConexion();
+    $estado = 5;
+    $consulta = $db->prepare("UPDATE notas_eva SET estado = :estado, nota = :nota WHERE id =:id");
     $consulta ->bindParam(':estado',$estado,PDO::PARAM_INT);
     $consulta ->bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta ->bindParam(':nota',$data->nota,PDO::PARAM_INT);
     return $consulta -> execute();
 }
 //icfes

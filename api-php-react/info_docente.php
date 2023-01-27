@@ -128,6 +128,9 @@ if(isset($data)){
         case 21:
             $devuelta = Cargar_evaluacion_notas($data); 
         break;
+        case 22:
+            $devuelta = Cargar_evaluacion_notas($data); 
+        break;
     }
     echo json_encode($devuelta);
 }else{
