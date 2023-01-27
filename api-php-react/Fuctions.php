@@ -1430,10 +1430,10 @@ function verificar_libro_aula($id){
     $consulta ->execute();
     return $consulta ->fetchAll();
 }
-function Cargar_libro_aula($id){
+function Cargar_libro_aula($data){
     $db = obtenerConexion();
     $consulta = $db ->prepare("SELECT * FROM db_libros WHERE  id = :id");
-    $consulta->bindValue(":id",$id,PDO::PARAM_STR);
+    $consulta->bindValue(":id",$data->id,PDO::PARAM_STR);
     $consulta ->execute();
     return $consulta ->fetchAll();
 }
