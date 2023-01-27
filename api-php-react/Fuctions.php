@@ -1821,19 +1821,7 @@ function Cargar_evaluacion_notas($data){
     INNER JOIN estudiantes estu ON notas_eva.id_estu = estu.id
     INNER JOIN estado_actividad ON notas_eva.estado = estado_actividad.id_a
     INNER JOIN cursos_as ON  notas_eva.id_curso = cursos_as.id_curso
-    WHERE id_eva = :id_eva AND id_estu = :id_estu");
-    $consulta -> bindParam(':id_eva',$data->id,PDO::PARAM_STR);
-    $consulta -> bindParam(':id_estu',$data->id_estudiante,PDO::PARAM_STR);
-    $consulta ->execute();
-    return $consulta->fetchAll();
-}
-function Cargar_evaluacion_notas_total($data){
-    $db = obtenerConexion();
-    $consulta = $db ->prepare("SELECT notas_eva.*,estu.Nombre as Nombree,estu.Apellido as Apellidoe, estado_actividad.Nombre as n_estado, cursos_as.Curso_Nu as curso_nombre FROM notas_eva 
-    INNER JOIN estudiantes estu ON notas_eva.id_estu = estu.id
-    INNER JOIN estado_actividad ON notas_eva.estado = estado_actividad.id_a
-    INNER JOIN cursos_as ON  notas_eva.id_curso = cursos_as.id_curso
-    WHERE id_eva = :id_eva ");
+    WHERE id_eva = :id_eva");
     $consulta -> bindParam(':id_eva',$data->id,PDO::PARAM_STR);
     $consulta ->execute();
     return $consulta->fetchAll();
