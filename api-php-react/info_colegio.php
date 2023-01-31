@@ -7,10 +7,9 @@ if(isset($data)){
     $devuelta = '';
     switch($st){
         case 0:
-            $devuelta = colegio_editar($data);
+            $devuelta = Cargar_Colegio_id($data);
         break;
         case 1:
-            $devuelta = Cargar_Cordinador($data);
         break;
         case 2:
         break;

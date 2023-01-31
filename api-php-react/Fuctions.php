@@ -74,6 +74,14 @@ function db_buscar_codigo_cor($date){
     $fin = $consulta->rowCount();
     return $fin;
 }
+function Cargar_Cordinador($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT nombre,apellido,correo,documento,id_Col FROM cordinador 
+    WHERE id =:id");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_STR);
+    $consulta ->execute();
+    return $consulta->fetchAll(); 
+}
 function Buscador_estu_pro($data){
     $db =obtenerConexion();
     $sql = 'SELECT id,Id_curso,Nombre,Apellido,imagen FROM estudiantes WHERE id_colegio ='.$data->col;
@@ -2432,6 +2440,13 @@ function Cargar_Pensamiento($data){
     $consulta = $db ->prepare("SELECT * FROM pensamientos WHERE Periodo = :per AND Materias = :Mat");
     $consulta -> bindParam(':per',$data->Periodo,PDO::PARAM_STR);
     $consulta -> bindParam(':Mat',$data->Materia,PDO::PARAM_STR);
+    $consulta -> execute();
+    return $consulta -> fetchAll();
+}
+function Cargar_Colegio_id($data){
+    $db =obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM colegios WHERE id = :id ");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
     $consulta -> execute();
     return $consulta -> fetchAll();
 }
