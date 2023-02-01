@@ -7,14 +7,17 @@ if(isset($data)){
     $devuelta = '';
     switch($st){
         case 0:
-            $devuelta = Cargar_Colegio_id($data);
+            $devuelta = Consultar_Curso_id($data);
         break;
         case 1:
-            $devuelta = colegio_editar($data);
+            $devuelta = Consultar_Cursos_Colegio($data);
         break;
         case 2:
+            $devuelta = Borrar_curso_id($data);
         break;
         case 3:
+            $devuelta = Editar_Curso_id($data);
+            
         break;
     }
     echo json_encode($devuelta);

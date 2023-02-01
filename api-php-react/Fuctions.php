@@ -405,7 +405,7 @@ function colegio_editar($data){
     $consulta ->bindParam(':contacto',$data->contacto,PDO::PARAM_STR);
     $consulta ->bindParam(':info',$data->info,PDO::PARAM_STR);
     $consulta ->bindParam(':imagen',$data->imagen,PDO::PARAM_STR);
-    $consulta ->bindParam(':id',$data->id,PDO::PARAM_STR);
+    $consulta ->bindParam(':id',$data->id,PDO::PARAM_INT);
     return $consulta -> execute();
 }
 function colegio_vence_renovar($id){
@@ -1822,6 +1822,36 @@ function veri_eva_t($data){
     $consulta -> bindParam(':id_eva',$data->id_eva,PDO::PARAM_INT);
     $consulta ->execute();
     return $consulta->fetchAll();
+}
+function Consultar_Curso_id($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM cursos WHERE id = :id ");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta ->execute();
+    return $consulta->fetchAll();
+}
+function Consultar_Cursos_Colegio($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("SELECT * FROM cursos WHERE IdCol = :id ");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    $consulta ->execute();
+    return $consulta->fetchAll();
+}
+function Borrar_curso_id ($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("DELETE FROM cursos WHERE id = :id");
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    return $consulta ->execute(); 
+}
+function Editar_Curso_id ($data){
+    $db = obtenerConexion();
+    $consulta = $db ->prepare("UPDATE cursos SET Curso_Nu = :Curso_Nu, materias = :materias, horas = :horas, Dias = :Dias WHERE id =:id");
+    $consulta -> bindParam(':Curso_Nu',$data->Curso_Nu,PDO::PARAM_INT);
+    $consulta -> bindParam(':materias',$data->materias,PDO::PARAM_INT);
+    $consulta -> bindParam(':horas',$data->horas,PDO::PARAM_INT);
+    $consulta -> bindParam(':Dias',$data->Dias,PDO::PARAM_INT);
+    $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
+    return $consulta ->execute(); 
 }
 function Cargar_evaluacion_notas($data){
     $db = obtenerConexion();
