@@ -80,7 +80,7 @@ function Cargar_Cordinador($data){
     WHERE id =:id");
     $consulta -> bindParam(':id',$data->id,PDO::PARAM_STR);
     $consulta ->execute();
-    return $consulta->fetchAll(); 
+    return $consulta->fetchObject(); 
 }
 function Buscador_estu_pro($data){
     $db =obtenerConexion();
@@ -2478,7 +2478,7 @@ function Cargar_Colegio_id($data){
     $consulta = $db ->prepare("SELECT * FROM colegios WHERE id = :id ");
     $consulta -> bindParam(':id',$data->id,PDO::PARAM_INT);
     $consulta -> execute();
-    return $consulta -> fetchAll();
+    return $consulta -> fetchObject();
 }
 function Borrar_Pensamiento($data){
     $db = obtenerConexion();
