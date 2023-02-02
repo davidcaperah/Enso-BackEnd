@@ -11,7 +11,7 @@ if($perfil){
             $pass1= $pass->pass;
             if(password_verify($verify,$pass1)){
                 $res = Buscar_codcor($perfil->Email);
-                $estado = array("estado"=>"4","id"=>$res->id);
+                $estado = array("estado"=>"4","id"=>$res->id,"id_Col"=>$res->id_Col);
                 echo json_encode($estado);
             }else{
                 echo json_encode(array('mensaje'=>'Contraseña incorrecta verificar o llamar a soporte'));

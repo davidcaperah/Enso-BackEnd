@@ -40,7 +40,7 @@ function Borrar_Cod($params){
 
 function Buscar_codcor($d){
     $db = obtenerConexion();
-    $consulta = $db->prepare("SELECT id FROM cordinador WHERE correo = ?");
+    $consulta = $db->prepare("SELECT id,id_Col FROM cordinador WHERE correo = ?");
     $consulta -> bindValue(1,$d);
     $consulta -> execute();
     return $consulta->fetchObject();
