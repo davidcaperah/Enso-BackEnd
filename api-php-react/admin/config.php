@@ -69,6 +69,46 @@ function Ver_super($id){
   $consulta ->execute();
   return $consulta->fetch();
 }
+//Reseller
+function Crear_Reseller($data){
+  $fecha = date("d-m-Y");
+  $db = obtenerConexion();
+  $consulta = $db -> prepare("INSERT INTO recuperar (`Nombre`, `Apellido`, `Correo`,`Pass` ) VALUES
+  (:Nombre,:Apellido,:Correo,:Pass,:Tipo)");
+  $consulta -> bindParam(':Nombre',$data->cod,PDO::PARAM_STR);
+  $consulta -> bindParam(':Apellido',$data->correo,PDO::PARAM_STR);
+  $consulta -> bindParam(':Correo',$fecha,PDO::PARAM_STR);
+  $consulta -> bindParam(':Pass',$fecha,PDO::PARAM_STR);
+  $consulta -> bindParam(':Tipo',$data->Tipo,PDO::PARAM_INT);
+  return $consulta ->execute();
+ 
+}
+function db_agregar_col($data){
+  $db = obtenerConexion();
+  $super = "1";
+  $fecha = date("d-m-Y");
+  $fecha_vencimiento = date("d-m-Y",strtotime($fecha."+ 1 month"));
+  $pago = "1";
+  $cupos = "0";
+  $cuposMax ="0";
+  $pro ="0";
+  $info = preg_replace('([^A-Za-z0-9 ])', ' ', $data->Info);
+  $consulta = $db ->prepare("INSERT INTO colegios (NombreC,supervisor,Cordinador,contacto,fecha_creación,pago,cupos,cupos_max,profesores,id_cod,info,fecha_vencimiento) 
+  VALUES (:Nombre,:Super,:Cordinador,:contacto,:fecha_creación,:pago,:cupos,:cupos_max,:profesores,:id_cod,:info,:fecha_vencimiento)");
+  $consulta -> bindValue(":Nombre",$data->Nombre,PDO::PARAM_STR);
+  $consulta -> bindValue(":Super",$super,PDO::PARAM_STR);
+  $consulta -> bindValue(":Cordinador",$data -> id,PDO::PARAM_STR);
+  $consulta -> bindValue(":contacto",$data -> Telefono,PDO::PARAM_STR);
+  $consulta -> bindValue(":fecha_creación",$fecha,PDO::PARAM_STR);
+  $consulta -> bindValue(":pago",$pago,PDO::PARAM_INT);
+  $consulta -> bindValue(":cupos",$cupos,PDO::PARAM_INT);
+  $consulta -> bindValue(":cupos_max",$cuposMax,PDO::PARAM_INT);
+  $consulta -> bindValue(":profesores",$pro,PDO::PARAM_INT);
+  $consulta -> bindValue(":id_cod",$data -> Codigo,PDO::PARAM_STR);
+  $consulta -> bindValue(":info",$info,PDO::PARAM_STR);
+  $consulta -> bindValue(":fecha_vencimiento",$fecha_vencimiento,PDO::PARAM_STR);
+  return $consulta->execute();
+}
 //correos
 function correo_cambio($data){
   $fecha = date("d-m-Y");

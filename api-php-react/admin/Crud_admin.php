@@ -10,6 +10,9 @@ if(isset($data)){
         case 0:
            $devuelta = Ver_super($data->id);  
         break;
+        case 1:
+            $devuelta = db_agregar_col($data);  
+         break;
     }
     echo json_encode($devuelta);
 }else{
